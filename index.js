@@ -33,11 +33,3 @@ https.get('https://discordapp.com/api/webhooks/525296886060679169/Soicvoi3qNA7FS
     console.log(err);
     console.log('Error', err.message);
   });
-
-
-  // xhr.open ('GET','https://discordapp.com/api/webhooks/525296886060679169/Soicvoi3qNA7FS8XDQGB8xYi117rpm20hIqOleG0Bhn65HsZK2yLCGTf8utg3x3mErXM', false);
-  // xhr.setRequestHeader("Content-type", "application/json");
-  // if(xhr.readyState == XMLHttpRequest.DONE) {
-  //   let responceText = xhr.responseText;
-  //   console.log (responceText);
-  // }
