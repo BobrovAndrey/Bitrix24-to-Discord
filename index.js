@@ -10,6 +10,7 @@
   const http = require('http');
   const url = require('url');
   const StringDecoder = require('string_decoder').StringDecoder;
+  const BX24 = require ('b24');
 
 // Init the server 
 
@@ -43,13 +44,24 @@ server = http.createServer(function(req,res){
   });
   req.on('end',() => {
     buffer += decoder.end();
-    // let finalBuffer = JSON.stringify(buffer);
+    let finalBuffer = Object.entries(buffer);
+    
 
     console.log(`Request method: ${ method}`);
     console.log(`Path is: ${ path}`);
     console.log(`Query String Object: ${ queryStringObj}`);
     console.log(`Request received with headers: ${ headers}`);
     console.log(`Request received with payload: ${ buffer}`);
+    console.log(`---------------------------------------------------------------------`);
+    console.log(`Request received with payload: ${ finalBuffer}`);
+
+
+    BX24.callMethod("crm.lead.get", { id: '1b87798bc2d16c4b7f2a604e0c899a34' }, function(result) {
+                      if(result.error())
+                          console.error(result.error());
+                      else
+                          console.dir(result.data());
+    });
   });
 
 });
@@ -58,6 +70,19 @@ server = http.createServer(function(req,res){
 server.listen(80, function(){
   console.log('The server is listening on port 80 now');
 });
+
+
+// var id = prompt("Enter ID");
+//         BX24.callMethod(
+//             "crm.lead.get", 
+//             { id: id }, 
+//             function(result) 
+//             {
+//                 if(result.error())
+//                     console.error(result.error());
+//                 else
+//                     console.dir(result.data());
+//             }
 
 
 
