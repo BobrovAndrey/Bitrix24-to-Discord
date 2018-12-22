@@ -1,79 +1,71 @@
 /*
 * Bitrix24 to Discord data courier
-* ver 0.2  
-*
-*
+* ver 0.2
+* made by Bobrov Andrey
+* https://github.com/BobrovAndrey
 */
 
-//Dependencies
-  const http = require('http');
-  const StringDecoder = require('string_decoder').StringDecoder;
-  const querystring = require('querystring');
-  const XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
+// Dependencies
+const http = require('http')
+const querystring = require('querystring')
+const XMLHttpRequest = require('xmlhttprequest').XMLHttpRequest
 
-// Init the server 
+// Init the server
+let server = {}
 
-let server = {};
-
-//Init HTTP request
-let xhr = new XMLHttpRequest();
-
+// Init HTTP request
+let xhr = new XMLHttpRequest()
 
 // Init the HTTPS server
-server = http.createServer(function(req,res){
+server = http.createServer(function (req, res) {
   // server.unifiedServer(req,res);
-  res.end('Hello, it`/s bitrix24 to Discord data courier\n');
+  res.end('Hello, it`/s bitrix24 to Discord data courier\n')
 
-  // //Get the parsed URL
-  let parsedUrl = req.url;
-  let path = parsedUrl.pathname;
+  // Get the parsed URL
+  let parsedUrl = req.url
 
+  // Get the pathname
+  let path = parsedUrl.pathname
 
-  //Get the query string
-  let queryStringObj = parsedUrl.query; // Undefined
-  
+  // Get the query string
+  let queryStringObj = parsedUrl.query
+
   // Get the headers
-  let headers = req.headers;
+  let headers = req.headers
 
-  //Get the HTTP method
-  let method = req.method.toLowerCase();
+  // Get the HTTP method
+  let method = req.method.toLowerCase()
 
-  //Get the payload 
-  // const decoder = new StringDecoder('utf-8');
-
-    let buffer = '';
+  // Get the payload
+  let buffer = ''
   req.on('data', (data) => {
-    buffer += data;
-  });
+    buffer += data
+  })
 
-  req.on('end',() => {
-    // let finalBuffer = querystring.parse (buffer);
-    // let leadID = Object.values(finalBuffer)[1];
-    let leadId = Object.values(querystring.parse(buffer))[1];
-    let bittrexRawAddress = Object.values(querystring.parse(buffer))[3];
+  // After request got 'end' status -> main logic
+  req.on('end', () => {
+    let leadId = Object.values(querystring.parse(buffer))[1]
+    let bittrexRawAddress = Object.values(querystring.parse(buffer))[3]
     let bittrexAdress = `https://${bittrexRawAddress}/crm/lead/details/${leadId}/`
     let requestBody = {
-      "name": "Bitrix24 to Discord data courier",
-      "channel_id": "525295956720222238",
-      "token": "Soicvoi3qNA7FS8XDQGB8xYi117rpm20hIqOleG0Bhn65HsZK2yLCGTf8utg3x3mErXM",
-      "avatar": "http://www.ceo.ru/files/news/news_pics/410.png",
-      "guild_id": "525295956720222234",
-      "id": "525296886060679169",
-      "content" : `Lead with ID ${leadId} was created at your Bittrex24 ${bittrexAdress} account`
-    };
-    let requestBodyTrue = JSON.stringify(requestBody); 
+      'name': 'Bitrix24 to Discord data courier',
+      'channel_id': '525295956720222238',
+      'token': 'Soicvoi3qNA7FS8XDQGB8xYi117rpm20hIqOleG0Bhn65HsZK2yLCGTf8utg3x3mErXM',
+      'avatar': 'http://www.ceo.ru/files/news/news_pics/410.png',
+      'guild_id': '525295956720222234',
+      'id': '525296886060679169',
+      'content': `Lead with ID ${leadId} was created at your Bittrex24 ${bittrexAdress} account`
+    }
+    let requestBodyTrue = JSON.stringify(requestBody)
 
-    // console.log(`Request method: ${ method}`);
-    // console.log(`Path is: `,  path);
-    // console.log(`Query String Object`, queryStringObj);
-    // console.log(`Request received with headers: ${ headers}`);
-    // console.log(`Request received with payload: ${ buffer}`);
-    // console.log(`---------------------------------------------------------------------`);
-    // console.log(finalBuffer);
-    // console.log(`---------------------------------------------------------------------`);
-    // console.log(finalBuffer);
-    console.log('Birrex24: ', bittrexAdress);
-    console.log('Lead ID is: ', leadId);
+    // Logging all data, that may be useful
+    console.log(`Request method: ${method}`)
+    console.log(`Path is: `, path)
+    console.log(`Query String Object`, queryStringObj)
+    console.log(`Request received with headers: ${headers}`)
+    console.log(`Request received with payload: ${buffer}`)
+    console.log('Birrex24: ', bittrexAdress)
+    console.log('Lead ID is: ', leadId)
 
     xhr.open('POST','https://discordapp.com/api/webhooks/525296886060679169/Soicvoi3qNA7FS8XDQGB8xYi117rpm20hIqOleG0Bhn65HsZK2yLCGTf8utg3x3mErXM',false);
 
