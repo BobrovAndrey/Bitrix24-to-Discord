@@ -25,7 +25,6 @@ let server = http.createServer(function (req, res) {
     throw new Error(`"DISCORD_WEBHOOK_URL" environment variable is not set or does not contain a valid Discord webhook url`)
   }
 
-  // let DiscordEnv = 'https://discordapp.com/api/webhooks/525296886060679169/Soicvoi3qNA7FS8XDQGB8xYi117rpm20hIqOleG0Bhn65HsZK2yLCGTf8utg3x3mErXM'
   // After request got 'end' status -> main logic
   req.on('end', () => {
     try {
@@ -36,24 +35,28 @@ let server = http.createServer(function (req, res) {
       let leadUrl = `https://${bitrixDomain}/crm/lead/details/${leadId}/`
 
       // Build the payload
-      let payload = {
-        'content': `Lead with ID ${leadId} was created at your Bittrex24 ${leadUrl} account`
-      }
-
-      // Send HTTP request
-      let xhr = new XMLHttpRequest()
-      xhr.open('POST', DISCORD_WEBHOOK_URL, false)
-      xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
-
-      xhr.onreadystatechange = () => {
-        if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
-          console.log('Success:', xhr.readyState)
-        } else {
-          throw new Error(`Sending data to Discord unsuccessful. Error code: ${xhr.readyState}`)
+      if (leadId && leadUrl) {
+        let payload = {
+          'content': `Lead with ID ${leadId} was created at your Bittrex24 ${leadUrl} account`
         }
-      }
 
-      xhr.send(JSON.stringify(payload))
+        // Send HTTP request
+        let xhr = new XMLHttpRequest()
+        xhr.open('POST', DISCORD_WEBHOOK_URL, false)
+        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
+
+        xhr.onreadystatechange = () => {
+          if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+            console.log('Success:', xhr.readyState)
+          } else {
+            throw new Error(`Sending data to Discord unsuccessful. Error code: ${xhr.readyState}`)
+          }
+        }
+
+        xhr.send(JSON.stringify(payload))
+      } else {
+        console.log('leadId and leadUrl are needed to form a payload, corrupted data was provided: ', data)
+      }
     } catch (e) {
       throw new Error(e)
     }
