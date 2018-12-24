@@ -1,6 +1,6 @@
 /*
 * Bitrix24 to Discord data courier
-* ver 0.2
+* ver 0.5.0.2
 * made by Bobrov Andrey
 * https://github.com/BobrovAndrey
 */
@@ -9,92 +9,54 @@
 const http = require('http')
 const querystring = require('querystring')
 const XMLHttpRequest = require('xmlhttprequest').XMLHttpRequest
-let DiscordEnv = process.env.B_TO_D_ID
-// let DiscordEnv = 'https://discordapp.com/ap/webhooks/526690487059349505/mRAAWJJVMQZ8DbIFaCtFIWJr6EwXUuiyMxE7NZpvSNVj3rGs3t9RKWBY9bSVo4SqGjRZ'
 
-// Init the server
-let server = {}
-
-// Init HTTP request
-let xhr = new XMLHttpRequest()
+const DISCORD_WEBHOOK_URL = process.env.DISCORD_WEBHOOK_URL
 
 // Init the HTTPS server
-server = http.createServer(function (req, res) {
-  // server.unifiedServer(req,res);
+let server = http.createServer(function (req, res) {
   res.end('Hello, it`/s bitrix24 to Discord data courier\n')
 
-  // Get the parsed URL
-  let parsedUrl = req.url
-
-  // Get the pathname
-  let path = parsedUrl.pathname
-
-  // Get the query string
-  let queryStringObj = parsedUrl.query
-
-  // Get the headers
-  let headers = req.headers
-
-  // Get the HTTP method
-  let method = req.method.toLowerCase()
-
-  // Get the payload
   let buffer = ''
-  req.on('data', (data) => {
-    buffer += data
+  req.on('data', (chunk) => {
+    buffer += chunk
   })
 
-  // Valid Discord webhook adress
-  let DiscordEnvTrue = ''
-
-  // Check if the DiscordEnv contains Discord webhook adress
-  DiscordEnv = DiscordEnv.indexOf('discordapp.com/api/webhooks') > -1 ? DiscordEnv : false
-  if (DiscordEnv) {
-    DiscordEnvTrue = DiscordEnv
-  } else {
-    console.log('\x1b[31m%s\x1b[0m', `Error ${DiscordEnv} environment variable. It dos not belong to "Discord webhooks", and can\`t be in use`)
+  if (!DISCORD_WEBHOOK_URL || !DISCORD_WEBHOOK_URL.includes('discordapp.com/api/webhooks')) {
+    throw new Error(`"DISCORD_WEBHOOK_URL" environment variable is not set or does not contain a valid Discord webhook url`)
   }
 
-  // Get the request body from ENV
-
+  // let DiscordEnv = 'https://discordapp.com/api/webhooks/525296886060679169/Soicvoi3qNA7FS8XDQGB8xYi117rpm20hIqOleG0Bhn65HsZK2yLCGTf8utg3x3mErXM'
   // After request got 'end' status -> main logic
   req.on('end', () => {
-    let leadId = Object.values(querystring.parse(buffer))[1]
-    let bittrexRawAddress = Object.values(querystring.parse(buffer))[3]
-    let bittrexAdress = `https://${bittrexRawAddress}/crm/lead/details/${leadId}/`
-    let requestBody = {
-      'name': 'Bitrix24 to Discord data courier',
-      'channel_id': '525295956720222238',
-      'token': 'Soicvoi3qNA7FS8XDQGB8xYi117rpm20hIqOleG0Bhn65HsZK2yLCGTf8utg3x3mErXM',
-      'avatar': 'http://www.ceo.ru/files/news/news_pics/410.png',
-      'guild_id': '525295956720222234',
-      'id': '525296886060679169',
-      'content': `Lead with ID ${leadId} was created at your Bittrex24 ${bittrexAdress} account`
-    }
-    let requestBodyTrue = JSON.stringify(requestBody)
+    try {
+      // Parse incoming object
+      let data = querystring.parse(buffer)
+      let leadId = data['data[FIELDS][ID]']
+      let bitrixDomain = data['auth[domain]']
+      let leadUrl = `https://${bitrixDomain}/crm/lead/details/${leadId}/`
 
-    // Logging all data, that may be useful
-    console.log(`Request method: ${method}`)
-    console.log(`Path is: `, path)
-    console.log(`Query String Object`, queryStringObj)
-    console.log(`Request received with headers: ${headers}`)
-    console.log(`Request received with payload: ${buffer}`)
-    console.log('Birrex24: ', bittrexAdress)
-    console.log('\x1b[36m%s\x1b[0m', 'Lead ID is: ', leadId)
-
-    xhr.open('POST', DiscordEnvTrue, false)
-
-    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
-    console.log(requestBodyTrue)
-
-    xhr.onreadystatechange = () => {
-      if (xhr.readyState === 4) {
-        console.log('Success:', xhr.readyState)
-      } else {
-        console.log('Error', xhr.readyState)
+      // Build the payload
+      let payload = {
+        'content': `Lead with ID ${leadId} was created at your Bittrex24 ${leadUrl} account`
       }
+
+      // Send HTTP request
+      let xhr = new XMLHttpRequest()
+      xhr.open('POST', DISCORD_WEBHOOK_URL, false)
+      xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
+
+      xhr.onreadystatechange = () => {
+        if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+          console.log('Success:', xhr.readyState)
+        } else {
+          throw new Error(`Sending data to Discord unsuccessful. Error code: ${xhr.readyState}`)
+        }
+      }
+
+      xhr.send(JSON.stringify(payload))
+    } catch (e) {
+      throw new Error(e)
     }
-    xhr.send(requestBodyTrue)
   })
 })
 
