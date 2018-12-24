@@ -67,25 +67,23 @@ server = http.createServer(function (req, res) {
     console.log('Birrex24: ', bittrexAdress)
     console.log('Lead ID is: ', leadId)
 
-    xhr.open('POST','https://discordapp.com/api/webhooks/525296886060679169/Soicvoi3qNA7FS8XDQGB8xYi117rpm20hIqOleG0Bhn65HsZK2yLCGTf8utg3x3mErXM',false);
+    xhr.open('POST', 'https://discordapp.com/api/webhooks/525296886060679169/Soicvoi3qNA7FS8XDQGB8xYi117rpm20hIqOleG0Bhn65HsZK2yLCGTf8utg3x3mErXM', false)
 
-    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-   
-    console.log(requestBodyTrue);
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')  
+    console.log(requestBodyTrue)
 
     xhr.onreadystatechange = () => {
-        if (xhr.readyState === 4) {
-          console.log('Success:', xhr.readyState);
-        } else {
-          console.log('Error', xhr.readyState);
-        }
+      if (xhr.readyState === 4) {
+        console.log('Success:', xhr.readyState)
+      } else {
+        console.log('Error', xhr.readyState)
       }
+    }
+    xhr.send(requestBodyTrue)
+  })
+})
 
-    xhr.send(requestBodyTrue);
-  });
-});
-
-//Start the server + tell him to listen
-server.listen(80, function(){
-  console.log('The server is listening on port 80 now');
-});
+// Start the server + tell him to listen
+server.listen(80, function () {
+  console.log('The server is listening on port 80 now')
+})
