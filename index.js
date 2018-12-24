@@ -46,10 +46,10 @@ let server = http.createServer(function (req, res) {
         xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
 
         xhr.onreadystatechange = () => {
-          if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
-            console.log('Success:', xhr.readyState)
+          if (xhr.readyState === 4 && xhr.status === 204) {
+            console.log(`Notification for lead ${leadId} was sent successfully with payload: `, payload)
           } else {
-            throw new Error(`Sending data to Discord unsuccessful. Error code: ${xhr.readyState}`)
+            throw new Error(`Sending data to Discord unsuccessful.\nXHR readyState: ${xhr.readyState}\nXHR status: ${xhr.status}`)
           }
         }
 
