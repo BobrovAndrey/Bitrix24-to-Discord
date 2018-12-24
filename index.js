@@ -9,6 +9,8 @@
 const http = require('http')
 const querystring = require('querystring')
 const XMLHttpRequest = require('xmlhttprequest').XMLHttpRequest
+let DiscordEnv = process.env.B_TO_D_ID
+// let DiscordEnv = 'https://discordapp.com/ap/webhooks/526690487059349505/mRAAWJJVMQZ8DbIFaCtFIWJr6EwXUuiyMxE7NZpvSNVj3rGs3t9RKWBY9bSVo4SqGjRZ'
 
 // Init the server
 let server = {}
@@ -42,6 +44,19 @@ server = http.createServer(function (req, res) {
     buffer += data
   })
 
+  // Valid Discord webhook adress
+  let DiscordEnvTrue = ''
+
+  // Check if the DiscordEnv contains Discord webhook adress
+  DiscordEnv = DiscordEnv.indexOf('discordapp.com/api/webhooks') > -1 ? DiscordEnv : false
+  if (DiscordEnv) {
+    DiscordEnvTrue = DiscordEnv
+  } else {
+    console.log('\x1b[31m%s\x1b[0m', `Error ${DiscordEnv} environment variable. It dos not belong to "Discord webhooks", and can\`t be in use`)
+  }
+
+  // Get the request body from ENV
+
   // After request got 'end' status -> main logic
   req.on('end', () => {
     let leadId = Object.values(querystring.parse(buffer))[1]
@@ -65,11 +80,11 @@ server = http.createServer(function (req, res) {
     console.log(`Request received with headers: ${headers}`)
     console.log(`Request received with payload: ${buffer}`)
     console.log('Birrex24: ', bittrexAdress)
-    console.log('Lead ID is: ', leadId)
+    console.log('\x1b[36m%s\x1b[0m', 'Lead ID is: ', leadId)
 
-    xhr.open('POST', 'https://discordapp.com/api/webhooks/525296886060679169/Soicvoi3qNA7FS8XDQGB8xYi117rpm20hIqOleG0Bhn65HsZK2yLCGTf8utg3x3mErXM', false)
+    xhr.open('POST', DiscordEnvTrue, false)
 
-    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')  
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
     console.log(requestBodyTrue)
 
     xhr.onreadystatechange = () => {
