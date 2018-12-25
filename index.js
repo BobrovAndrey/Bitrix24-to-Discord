@@ -37,7 +37,16 @@ let server = http.createServer(function (req, res) {
       // Build the payload
       if (leadId && leadUrl) {
         let payload = {
-          'content': `Lead with ID ${leadId} was created at your Bittrex24 ${leadUrl} account`
+          'embeds': [
+            {
+              'title': `New lead #${leadId}`,
+              // 'description': 'Request for invoice',
+              'url': leadUrl,
+              'author': {
+                'name': 'ACME Inc.'
+              }
+            }
+          ]
         }
 
         // Send HTTP request
