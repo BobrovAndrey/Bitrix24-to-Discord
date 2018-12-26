@@ -3,18 +3,22 @@
 * @param {string} req Who you're saying hello to
 */
 // // Dependencies
-// const http = require('http')
-// const querystring = require('querystring')
+const http = require('http')
+const querystring = require('querystring')
 // const XMLHttpRequest = require('xmlhttprequest').XMLHttpRequest
-
 const lib = require('lib')
+
 // const DISCORD_WEBHOOK_URL = process.env.DISCORD_WEBHOOK_URL
 const DISCORD_WEBHOOK_URL = 'https://discordapp.com/api/webhooks/525296886060679169/Soicvoi3qNA7FS8XDQGB8xYi117rpm20hIqOleG0Bhn65HsZK2yLCGTf8utg3x3mErXM'
 
-module.exports = async function (req = '', callback) {
-  console.log(typeof (req))
+// Buffer example const buffer = 'event=ONCRMLEADADD&data%5BFIELDS%5D%5BID%5D=365&ts=1545851621&auth%5Bdomain%5D=b24-46hovy.bitrix24.ru&auth%5Bclient_endpoint%5D=https%3A%2F%2Fb24-46hovy.bitrix24.ru%2Frest%2F&auth%5Bserver_endpoint%5D=https%3A%2F%2Foauth.bitrix.info%2Frest%2F&auth%5Bmember_id%5D=1b87798bc2d16c4b7f2a604e0c899a34&auth%5Bapplication_token%5D=o8kfcne3du24sfvoeahh43uf9oygu2x3'
+
+module.exports = async function (reqest = '', response = '') {
   // Init the HTTPS server
-  lib.createServer(function (req, res) {
+  http.createServer(function (req, res) {
+    this.req = reqest
+    this.res = response
+
     res.end('Hello, it`/s bitrix24 to Discord data courier\n')
 
     let buffer = ''
@@ -30,7 +34,8 @@ module.exports = async function (req = '', callback) {
     req.on('end', () => {
       try {
         // Parse incoming object
-        let data = lib.parse(buffer)
+        let data = querystring.parse(buffer)
+        console.log(buffer)
         let leadId = data['data[FIELDS][ID]']
         let bitrixDomain = data['auth[domain]']
         let leadUrl = `https://${bitrixDomain}/crm/lead/details/${leadId}/`
@@ -71,8 +76,7 @@ module.exports = async function (req = '', callback) {
         throw new Error(e)
       }
     })
-  }).listen(80, function () {
-    console.log('The server is listening on port 80 now')
+  }).listen(8170, function () {
+    console.log('The server is listening on port 8170 now')
   })
-  console.log(`Data is: ${req}`)
 }

@@ -15,7 +15,6 @@ const DISCORD_WEBHOOK_URL = process.env.DISCORD_WEBHOOK_URL
 // Init the HTTPS server
 http.createServer(function (req, res) {
   res.end('Hello, it`/s bitrix24 to Discord data courier\n')
-
   let buffer = ''
   req.on('data', (chunk) => {
     buffer += chunk
@@ -28,6 +27,8 @@ http.createServer(function (req, res) {
   // After request got 'end' status -> main logic
   req.on('end', () => {
     try {
+      console.log(`+===========+ Buffer is: ${buffer}`)
+      console.log(typeof (buffer))
       // Parse incoming object
       let data = querystring.parse(buffer)
       let leadId = data['data[FIELDS][ID]']
