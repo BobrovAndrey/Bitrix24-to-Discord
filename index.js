@@ -13,7 +13,7 @@ const XMLHttpRequest = require('xmlhttprequest').XMLHttpRequest
 const DISCORD_WEBHOOK_URL = process.env.DISCORD_WEBHOOK_URL
 
 // Init the HTTPS server
-let server = http.createServer(function (req, res) {
+http.createServer(function (req, res) {
   res.end('Hello, it`/s bitrix24 to Discord data courier\n')
 
   let buffer = ''
@@ -70,9 +70,6 @@ let server = http.createServer(function (req, res) {
       throw new Error(e)
     }
   })
-})
-
-// Start the server + tell him to listen
-server.listen(80, function () {
+}).listen(80, function () {
   console.log('The server is listening on port 80 now')
 })
