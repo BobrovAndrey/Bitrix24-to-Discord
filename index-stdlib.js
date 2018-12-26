@@ -5,6 +5,7 @@
 // // Dependencies
 const http = require('http')
 const querystring = require('querystring')
+const fetch = require('node-fetch')
 // const XMLHttpRequest = require('xmlhttprequest').XMLHttpRequest
 const lib = require('lib')
 
@@ -54,7 +55,11 @@ module.exports = async function (reqest = '', response = '') {
               }
             ]
           }
-
+          
+          // Fetch example
+          const newPostToDiscord = post => {
+            return fetch(DISCORD_WEBHOOK_URL)
+          }
           // Send HTTP request
           let xhr = new XMLHttpRequest()
           xhr.open('POST', DISCORD_WEBHOOK_URL, false)
