@@ -6,12 +6,10 @@ module.exports = async function (context) {
     let leadId = context.params['data[FIELDS][ID]']
     let bitrixDomain = context.params['auth[domain]']
 
-    let leadUrl = `https://${bitrixDomain}/crm/lead/details/${leadId}/`
-
     let payload = { 'embeds': [
       {
         'title': `New lead was recently created #${leadId}`,
-        'url': leadUrl,
+        'url': `https://${bitrixDomain}/crm/lead/details/${leadId}/`,
         'author': {
           'name': bitrixDomain
         }
