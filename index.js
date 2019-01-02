@@ -44,7 +44,7 @@ http.createServer(function (req, res) {
               // 'description': 'Request for invoice',
               'url': leadUrl,
               'author': {
-                'name': 'ACME Inc.'
+                'name': bitrixDomain
               }
             }
           ]
