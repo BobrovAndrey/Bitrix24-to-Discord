@@ -12,11 +12,9 @@ module.exports = async function (context) {
 
     let leadUrl = `https://${bitrixDomain}/crm/lead/details/${leadId}/`
 
-    // let gotData = {"content": `${leadId}`}
     let gotData = { 'embeds': [
       {
         'title': `New lead was recently created #${leadId}`,
-        // 'description': 'Request for invoice',
         'url': leadUrl,
         'author': {
           'name': bitrixDomain
