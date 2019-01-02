@@ -1,7 +1,3 @@
-// /**
-// * Bitrix24 to Discord data courier
-// */
-
 const got = require('got')
 const DISCORD_WEBHOOK_URL = process.env.DISCORD_WEBHOOK_URL
 
@@ -12,7 +8,7 @@ module.exports = async function (context) {
 
     let leadUrl = `https://${bitrixDomain}/crm/lead/details/${leadId}/`
 
-    let gotData = { 'embeds': [
+    let payload = { 'embeds': [
       {
         'title': `New lead was recently created #${leadId}`,
         'url': leadUrl,
@@ -20,22 +16,21 @@ module.exports = async function (context) {
           'name': bitrixDomain
         }
       }
-    ]
-    }
-    leadId = leadId !== undefined && typeof (leadId) === 'string' ? leadId : false
+    ] }
 
-    if (leadId) {
+    if (leadId > 0) {
       await got.post(DISCORD_WEBHOOK_URL, {
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: JSON.stringify(gotData)
+        body: JSON.stringify(payload)
       })
     } else {
-      throw new Error(`Error, requst did not contain any lead id information of lead id information type did not mutch "string" type,${leadId}`)
+      throw new Error(`Incoming webhook payload did not contain valid leadId parameter, got "${leadId}" instead`)
     }
   } catch (error) {
-    console.error('Error, while asign "incomingLeadId"', error)
+    throw new Error(error)
   }
 }
+
 
 /*
 // bitrix-to-discord-notify
@@ -53,9 +48,6 @@ module.exports = async function (context) {
     await discord.send(WEBHOOK_URL, payload )
     await sms.send(NUMBER, payload)
 }
-
-
-
 let parseWebhookData = function (data) {
     return {
         leadId: data['data[FIELDS][ID]']
