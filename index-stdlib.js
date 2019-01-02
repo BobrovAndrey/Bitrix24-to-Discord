@@ -2,7 +2,6 @@
 // * Bitrix24 to Discord data courier
 // */
 
-// const fetch = require('node-fetch')
 const got = require('got')
 const DISCORD_WEBHOOK_URL = process.env.DISCORD_WEBHOOK_URL
 
