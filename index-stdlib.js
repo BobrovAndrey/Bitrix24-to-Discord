@@ -55,3 +55,21 @@ let parseWebhookData = function (data) {
 }
 
 */
+
+/*
+const parser = require('./parser')
+
+let context = { params: { event: 'ONCRMLEADADD',
+  'data[FIELDS][ID]': '709',
+  ts: '1546509550',
+  'auth[domain]': 'b24-46hovy.bitrix24.ru',
+  'auth[client_endpoint]': 'https://b24-46hovy.bitrix24.ru/rest/',
+  'auth[server_endpoint]': 'https://oauth.bitrix.info/rest/',
+  'auth[member_id]': '1b87798bc2d16c4b7f2a604e0c899a34',
+  'auth[application_token]': 'o8kfcne3du24sfvoeahh43uf9oygu2x3' }
+}
+
+const payload = parser.Payload(null, '525295956720222238', 'Soicvoi3qNA7FS8XDQGB8xYi117rpm20hIqOleG0Bhn65HsZK2yLCGTf8utg3x3mErXM', 'http://www.ceo.ru/files/news/news_pics/410.png', '525295956720222234', '525296886060679169', `Lead with ID was created at your Bittrex24 account`)
+console.log(payload)
+*/
+
