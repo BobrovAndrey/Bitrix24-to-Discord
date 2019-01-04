@@ -1,6 +1,5 @@
 let parser = {}
 
-// Parse data from bitrix
 parser.data = function (incomingData) {
   return {
     'leadId': incomingData.params['data[FIELDS][ID]'],
@@ -25,7 +24,7 @@ parser.payload = function (name, channelId, token, avatar, guildId, id, content)
     'content': content // `Lead with ID ${leadId} was created at your Bittrex24 ${bitrixDomain} account`
   }
 }
-// Form embeds data
+
 parser.embeds = function (title, url, name) {
   return { 'embeds': [
     {

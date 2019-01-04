@@ -1,15 +1,27 @@
 const got = require('got')
-let sender = async function (discordWebhookUrl, leadId, payload) {
-  discordWebhookUrl = discordWebhookUrl || null
-  leadId = leadId || null
-  payload = payload || null
+// const fetch = require('node-fetch')
+const sender = {}
 
-  if (leadId !== null && payload !== null) {
-    await got.post(discordWebhookUrl, {
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: JSON.stringify(payload)
-    })
-  }
+// sender.post = async function (discordWebhookUrl, payload) {
+//   await fetch(discordWebhookUrl, {
+//     method: 'POST',
+//     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+//     body: JSON.stringify(payload)
+//   })
+//   console.log(response.body)
+//     .then(res => res.json())
+//     .then(json => console.log(json))
+//   console.log(response.body)
+// } 
+  
+sender.gotPost = async function (discordWebhookUrl, payload) {
+  await got.post(discordWebhookUrl, {
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: JSON.stringify(payload)
+  })
+  return (sender.gotPost.body)
 }
 
+
 module.exports = sender
+

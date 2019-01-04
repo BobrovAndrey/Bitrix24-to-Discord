@@ -1,75 +1,40 @@
-const got = require('got')
+const parser = require('../parser.js')
+const sender = require('../sender.js')
+// const got = require('got')
 const DISCORD_WEBHOOK_URL = process.env.DISCORD_WEBHOOK_URL
 
 module.exports = async function (context) {
+  console.log('NEW REQUEST--------------------')
   try {
-    let leadId = context.params['data[FIELDS][ID]']
-    let bitrixDomain = context.params['auth[domain]']
+    const leadId = parser.data(context).leadId
+    const bitrixDomain = parser.data(context).bitrixDomain
 
-    let payload = { 'embeds': [
-      {
-        'title': `New lead was recently created #${leadId}`,
-        'url': `https://${bitrixDomain}/crm/lead/details/${leadId}/`,
-        'author': {
-          'name': bitrixDomain
-        }
-      }
-    ] }
+    let payload = parser.embeds(`New lead was recently created #${leadId}`, `https://${bitrixDomain}/crm/lead/details/${leadId}`, bitrixDomain)
+    // let payload2 = { 'embeds': [
+    //   {
+    //     'title': `New lead was recently created #${leadId}`,
+    //     'url': `https://${bitrixDomain}/crm/lead/details/${leadId}/`,
+    //     'author': {
+    //       'name': bitrixDomain
+    //     }
+    //   }
+    // ] }
+    // let payload3 = parser.payload('Bitrix24 to Discord data courier', '525295956720222238', 'Soicvoi3qNA7FS8XDQGB8xYi117rpm20hIqOleG0Bhn65HsZK2yLCGTf8utg3x3mErXM', 'http://www.ceo.ru/files/news/news_pics/410.png', '525295956720222234', '525296886060679169', `Lead with ID was created at your Bittrex24 account`)
+    // console.log('Payload is: ', payload3)
 
-    if (leadId > 0) {
+    // const sender = {}
+    // sender.gotPost = async 
+    // let sender = 
+    // async function (DISCORD_WEBHOOK_URL, payload) {
       await got.post(DISCORD_WEBHOOK_URL, {
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: JSON.stringify(payload)
-      })
-    } else {
-      throw new Error(`Incoming webhook payload did not contain valid leadId parameter, got "${leadId}" instead`)
-    }
+      }, console.log('Payload is: ', payload))
+    //  }
+
+    // // sender.gotPost(DISCORD_WEBHOOK_URL, payload3)
+    sender.post(DISCORD_WEBHOOK_URL, payload)
   } catch (error) {
     throw new Error(error)
   }
 }
-
-
-/*
-// bitrix-to-discord-notify
-
-const discord = require('discord-sender')
-const bitrixParser = require('bitrix-webhook-parser')
-const bitrix = require('@2bad/iris.crm.bitrix)
-
-module.exports = async function (context) {
-    let { leadId, bitrixDomain } = bitrixParser.parseWebhookBody(context.params)
-    let leadData = bitrix.fetch('crm.lead.find', leadId)
-
-    let payload = {leadData.id, leadData.Name}
-
-    await discord.send(WEBHOOK_URL, payload )
-    await sms.send(NUMBER, payload)
-}
-let parseWebhookData = function (data) {
-    return {
-        leadId: data['data[FIELDS][ID]']
-        ...
-
-    }
-}
-
-*/
-
-/*
-const parser = require('./parser')
-
-let context = { params: { event: 'ONCRMLEADADD',
-  'data[FIELDS][ID]': '709',
-  ts: '1546509550',
-  'auth[domain]': 'b24-46hovy.bitrix24.ru',
-  'auth[client_endpoint]': 'https://b24-46hovy.bitrix24.ru/rest/',
-  'auth[server_endpoint]': 'https://oauth.bitrix.info/rest/',
-  'auth[member_id]': '1b87798bc2d16c4b7f2a604e0c899a34',
-  'auth[application_token]': 'o8kfcne3du24sfvoeahh43uf9oygu2x3' }
-}
-
-const payload = parser.Payload(null, '525295956720222238', 'Soicvoi3qNA7FS8XDQGB8xYi117rpm20hIqOleG0Bhn65HsZK2yLCGTf8utg3x3mErXM', 'http://www.ceo.ru/files/news/news_pics/410.png', '525295956720222234', '525296886060679169', `Lead with ID was created at your Bittrex24 account`)
-console.log(payload)
-*/
-
