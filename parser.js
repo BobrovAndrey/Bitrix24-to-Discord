@@ -4,7 +4,7 @@ let parser = {}
 try {
   parser.data = function (incomingData) {
     if (!incomingData.params) {
-      throw new ReferenceError(`"incomingData" does not contain required data`)
+      throw new ReferenceError(`"incomingData" does not contain "params"`)
     }
     return {
       'leadId': incomingData.params['data[FIELDS][ID]'],
