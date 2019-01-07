@@ -1,5 +1,5 @@
 const parser = require('../parser.js')
-const sender = require('../sender.js')
+const sender = require('./sender')
 // const got = require('got')
 const DISCORD_WEBHOOK_URL = process.env.DISCORD_WEBHOOK_URL
 

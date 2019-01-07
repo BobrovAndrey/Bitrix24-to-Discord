@@ -1,5 +1,6 @@
 let parser = {}
 
+// Parse data on parts
 parser.data = function (incomingData) {
   return {
     'leadId': incomingData.params['data[FIELDS][ID]'],
@@ -25,6 +26,7 @@ parser.payload = function (name, channelId, token, avatar, guildId, id, content)
   }
 }
 
+// Form embeds
 parser.embeds = function (title, url, name) {
   return { 'embeds': [
     {
